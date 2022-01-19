@@ -1,0 +1,14 @@
+.App {
+  text-align: center;
+  height: 100%;
+  background-color: bisque;
+}
+
+#root {
+  height: 100%;
+}
+
+.App-header {
+  opacity: .8;
+  font-size: 4em;
+}
