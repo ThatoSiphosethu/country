@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
@@ -25,15 +26,13 @@ class Country extends Component {
         return (
             <>
                 <div>
-                    {this.state.country}
-                    
+                    {this.state.country}                    
                 </div>
 
                 <div>
                     Gold Medals : {this.state.count}  
                     <AddBoxIcon
-                        onClick={this.increament}
-                        
+                        onClick={this.increament}                        
                     />
                     
                     {/* option2 */}
@@ -42,9 +41,7 @@ class Country extends Component {
                         > +
                     </button> */}
                     
-                </div>
-
-                
+                </div>                
             </>
         );
     }
