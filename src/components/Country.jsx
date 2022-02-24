@@ -1,50 +1,77 @@
-import React, { Component } from 'react';
+import React from 'react';
+import Medal from './Medal';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+// import AddBoxIcon from '@mui/icons-material/AddBox';
+// import Typography from '@mui/material/Typography';
+// import IndeterminateCheckBox from '@mui/icons-material/IndeterminateCheckBox';
 
-import AddBoxIcon from '@mui/icons-material/AddBox';
 
-
-class Country extends Component {
+const Country = props => {
     // state = {
     //     country: 'USA',
     //     count: 'Gold Medal'
     // }
-    constructor (props) {
-        super(props);
-        this.state = {
-            country: 'USA',
-            count: 0
-        }
-    }
+   
+    const {country, medals, onIncrease, onDecrease, } = props;
 
-    increament = () => {
-        this.setState({
-            count: this.state.count + 1
-        });
-    }
+   const overallMedalCount = (country, medals) => {
+        let medalCount = 0;
+        medals.forEach(medal => {medalCount += country[medal.type]; });
+        return medalCount;
+    };
 
-    render() {
+    
         return (
-            <>
-                <div>
-                    {this.state.country}                    
-                </div>
+            <React.Fragment>
+        <Card sx={{bgcolor: 'lightGray', minWidth: 275 }}>
+        <CardContent>
 
-                <div>
-                    Gold Medals : {this.state.count}  
-                    <AddBoxIcon
-                        onClick={this.increament}                        
-                    />
-                    
-                    {/* option2 */}
-                    {/* <button 
-                        onClick={this.increament}
-                        > +
-                    </button> */}
-                    
-                </div>                
-            </>
+        <div>
+            {country.country} : {overallMedalCount(country, medals)}
+        </div>
+        
+            {medals.map(medal =>(
+                <Medal
+                key={medal.id}
+                medal={medal}
+                country={country}
+                onIncrease={onIncrease}
+                onDecrease={onDecrease}
+                />
+            ))}
+        
+
+
+
+        {/* <Typography sx={{ fontSize: 15 }} color="black" gutterBottom>
+            {country.country} : {allMedalCount(country, medals)} 
+        </Typography> 
+
+        {/* <Typography sx={{ mb: 1.5 }} > */}
+            {/* {medals.map(medal => ( 
+                 <Medal
+                    key={medal.id}
+                    medal={medal}
+                    country={country}
+                    onIncrease={onIncrease}
+                    onDecrease={ onDecrease } 
+                /> 
+                 ))} */}
+
+         {/* </Typography> */}
+
+         {/* <Typography>
+            <button onClick={() => onDelete(country.id)}>Delete Country</button>
+        </Typography> */}
+                 
+        </CardContent>
+                       
+        </Card>
+        </React.Fragment>
+            
         );
     }
-}
+
 
 export default Country;
