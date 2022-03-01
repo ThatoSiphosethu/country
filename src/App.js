@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import axios from 'axios';
 import Country from './components/Country';
 import { Grid } from '@material-ui/core';
 import NewCountry from './components/NewCountry';
@@ -21,14 +22,23 @@ const App = () => {
   // };
 
   const [countries, setCountries] = useState([]);
+  const apiEndpoint = "https://medalapi.azurewebsites.net/Api/country";
 
-  useEffect( () => {
-    let mutableCountries = [
-      { id: 1, country: 'USA', Gold: 0, Silver: 2, Bronze: 3 },
-      { id: 2, country: 'China', Gold: 2, Silver: 2, Bronze: 3 },
-      { id: 3, country: 'Germany', Gold: 3, Silver: 2, Bronze: 3},
-    ]
-    setCountries(mutableCountries);
+  // useEffect( () => {
+  //   let mutableCountries = [
+  //     { id: 1, country: 'USA', Gold: 0, Silver: 2, Bronze: 3 },
+  //     { id: 2, country: 'China', Gold: 2, Silver: 2, Bronze: 3 },
+  //     { id: 3, country: 'Germany', Gold: 3, Silver: 2, Bronze: 3},
+  //   ]
+  //   setCountries(mutableCountries);
+  // }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const { data: fetchedCountries } = await axios.get(apiEndpoint);
+      setCountries(fetchedCountries);
+    }
+    fetchData();
   }, []);
 
   const medals = useRef ([
@@ -37,18 +47,33 @@ const App = () => {
     {id: 3, type: 'Bronze'},
   ]);
 
-  const addCountry = (country) => {
+  const addCountry = async (country) => {
     // const { countries } = this.state;
-    const id = countries.length === 0 ? 1 : Math.max(...countries.map(country => country.id)) + 1;
+    // const id = countries.length === 0 ? 1 : Math.max(...countries.map(country => country.id)) + 1;
     // const mutableCountries = [...countries].concat({ id: id, country: country, Gold: 0, Silver: 0, Bronze: 0 });
-    setCountries([...countries].concat({ id: id, country: country, Gold: 0, Silver: 0, Bronze: 0 }));
-  }
+    // setCountries([...countries].concat({ id: id, country: country, Gold: 0, Silver: 0, Bronze: 0 }));
+    const { data: post } = await axios.post(apiEndpoint, { name: country });
+    setCountries(countries.concat(post));
+  };
 
-  const deleteCountry  = (countryId) => {
+  const deleteCountry  = async (countryId) => {
     // const { countries } = this.state;
     // const mutableCountries = [...countries].filter(c => c.id !== countryId);
-    setCountries([...countries].filter(c => c.id !== countryId));
-  } 
+    // setCountries([...countries].filter(c => c.id !== countryId));
+    const localCountries = countries;
+    setCountries(countries.filter(c => c.id !== countryId));
+    try {
+      await axios.delete(`${apiEndpoint}/${countryId}`);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404) {
+        // country already deleted
+        console.log("The record does not exist - it may have already been deleted");
+      } else { 
+        alert('An error occurred while deleting');
+        setCountries(localCountries);
+      }
+    }
+  };
 
  
   const increament = (countryId, medal) => {
@@ -67,11 +92,17 @@ const App = () => {
     }
   };
 
+  // const overallMedalCount = () => {
+  //   let medalCount = 0;
+  //   medals.current.forEach(medal => {medalCount += countries.reduce((a,b) => a + b[medal.type], 0); });
+  //   return medalCount;
+  // };
+
   const overallMedalCount = () => {
     let medalCount = 0;
-    medals.current.forEach(medal => {medalCount += countries.reduce((a,b) => a + b[medal.type], 0); });
+    medals.current.forEach(medal => {medalCount += countries.reduce((a,b) => a + b[medal.type.toLowerCase()], 0); });
     return medalCount;
-  };
+  }
 
   // const overallMedalCount = () => {
   //   const gold = countries.reduce((a, b) => a + b.Gold, 0);

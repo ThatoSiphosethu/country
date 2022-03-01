@@ -3,7 +3,7 @@ import Medal from './Medal';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 // import AddBoxIcon from '@mui/icons-material/AddBox';
-// import Typography from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
 // import IndeterminateCheckBox from '@mui/icons-material/IndeterminateCheckBox';
 
 
@@ -13,11 +13,11 @@ const Country = props => {
     //     count: 'Gold Medal'
     // }
    
-    const {country, medals, onIncrease, onDecrease, } = props;
+    const {country, medals, onIncrease, onDecrease,onDelete } = props;
 
    const overallMedalCount = (country, medals) => {
         let medalCount = 0;
-        medals.forEach(medal => {medalCount += country[medal.type]; });
+        medals.forEach(medal => {medalCount += country[medal.type.toLowerCase()]; });
         return medalCount;
     };
 
@@ -28,7 +28,7 @@ const Country = props => {
         <CardContent>
 
         <div>
-            {country.country} : {overallMedalCount(country, medals)}
+            {country.name} : {overallMedalCount(country, medals)}
         </div>
         
             {medals.map(medal =>(
@@ -38,6 +38,7 @@ const Country = props => {
                 country={country}
                 onIncrease={onIncrease}
                 onDecrease={onDecrease}
+                onDelete={onDelete}
                 />
             ))}
         
@@ -61,9 +62,9 @@ const Country = props => {
 
          {/* </Typography> */}
 
-         {/* <Typography>
+         <Typography>
             <button onClick={() => onDelete(country.id)}>Delete Country</button>
-        </Typography> */}
+        </Typography>
                  
         </CardContent>
                        

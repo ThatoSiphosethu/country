@@ -13,14 +13,14 @@ const Medal = (props) => {
         return (
             <div className='medals'>
                  <Typography sx={{ fontSize: 15 }} color="black" gutterBottom>
-                    {medal.type} Medals: {country[medal.type]}
+                    {medal.type} Medals: {country[medal.type.toLowerCase()]}
                 </Typography>
                 <AddBoxIcon size="small" 
-                    onClick={() => onIncrease(country.id, medal.type)} 
+                    onClick={() => onIncrease(country.id, medal.type.toLowerCase())} 
                     color='primary'>
                 </AddBoxIcon>
                 <IndeterminateCheckBox size="small" 
-                    onClick={() => onDecrease(country.id, medal.type)}     
+                    onClick={() => onDecrease(country.id, medal.type.toLowerCase())}     
                     color='secondary'
                     disabled={country[medal.type] === 0}>
                 </IndeterminateCheckBox>  
